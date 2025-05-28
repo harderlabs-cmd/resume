@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karl Harder - Building Designer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 200% 0; }
+            50% { background-position: -200% 0; }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .header .tagline {
+            font-size: 1.1rem;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-2px);
+            color: #764ba2;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar, .content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            color: #764ba2;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+            position: relative;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .experience-item:hover, .education-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+        }
+
+        .job-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .company {
+            font-size: 1rem;
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .date {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+
+        .responsibilities {
+            list-style: none;
+        }
+
+        .responsibilities li {
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+            color: #555;
+        }
+
+        .responsibilities li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .skill-item {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+
+        .skill-item:hover {
+            transform: scale(1.05);
+        }
+
+        .software-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .software-item {
+            background: rgba(118, 75, 162, 0.1);
+            border: 2px solid #764ba2;
+            padding: 0.8rem;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 500;
+            color: #764ba2;
+            transition: all 0.3s ease;
+        }
+
+        .software-item:hover {
+            background: #764ba2;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .interests-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .interest-tag {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .references-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .reference-card {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .reference-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .reference-title {
+            color: #667eea;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .reference-contact {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .volunteer-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .header, .sidebar, .content, .volunteer-section {
+                background: white;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>KARL HARDER</h1>
+            <div class="subtitle">Senior Infrastructure Engineer & Security Specialist</div>
+            <p class="tagline">As a seasoned Senior Infrastructure Engineer with a strong foundation in information security, I bring over 10 years of experience in designing, implementing, and securing complex IT infrastructures. My expertise encompasses proactive threat monitoring, incident response, and governance aligned with ISO 27001 standards. Proficient in tools such as Proofpoint, Microsoft Defender, Huntress, RocketCyber, and various SIEM platforms, I have a proven track record in mitigating risks and enhancing system resilience through comprehensive security frameworks and automated solutions.</p>
+            
+            <div class="contact-info">
+                <a href="tel:0493527615" class="contact-item">
+                    📱 0493 527 615
+                </a>
+                <a href="mailto:karl.w.harder@gmail.com" class="contact-item">
+                    ✉️ karl.w.harder@gmail.com
+                </a>
+                <a href="https://linkedin.com/in/karl-harder" class="contact-item" target="_blank">
+                    🔗 LinkedIn Profile
+                </a>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <div class="section">
+                    <h2>Personal Skills</h2>
+                    <div class="skills-grid">
+                        <div class="skill-item">Attention to Detail</div>
+                        <div class="skill-item">Analytical Thinking</div>
+                        <div class="skill-item">Communication Skills</div>
+                        <div class="skill-item">Problem-Solving</div>
+                        <div class="skill-item">Organisation & Time Management</div>
+                        <div class="skill-item">Adaptability</div>
+                        <div class="skill-item">Integrity & Discretion</div>
+                        <div class="skill-item">Team Collaboration</div>
+                        <div class="skill-item">Proactiveness</div>
+                        <div class="skill-item">Customer-Centric Mindset</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Professional Skills</h2>
+                    <div class="skills-grid">
+                        <div class="skill-item">Risk Assessment & Management</div>
+                        <div class="skill-item">Security Governance (ISO 27001)</div>
+                        <div class="skill-item">Threat Detection & Incident Response</div>
+                        <div class="skill-item">Huntress & RocketCyber</div>
+                        <div class="skill-item">Endpoint Protection (Microsoft Defender, Datto EDR)</div>
+                        <div class="skill-item">Email Security Platforms (Proofpoint)</div>
+                        <div class="skill-item">Firewall Configuration & Management</div>
+                        <div class="skill-item">Identity & Access Management (IAM)</div>
+                        <div class="skill-item">Multi-Factor Authentication (MFA)</div>
+                        <div class="skill-item">Patch Management Processes</div>
+                        <div class="skill-item">Vulnerability Management</div>
+                        <div class="skill-item">Scripting & Automation (PowerShell, Bash)</div>
+                        <div class="skill-item">Network Security & Protocol Analysis</div>
+                        <div class="skill-item">Cloud Security (Microsoft 365, Azure)</div>
+                        <div class="skill-item">Security Policy Development</div>
+                        <div class="skill-item">Compliance Monitoring & Auditing</div>
+                        <div class="skill-item">Security Awareness Training</div>
+                        <div class="skill-item">Backup & Disaster Recovery Planning</div>
+                        <div class="skill-item">Technical Report Writing</div>
+                        <div class="skill-item">Security Tool Integration & Optimization</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Software & Technology Proficiency</h2>
+                    <div class="software-grid">
+                        <div class="software-item">Microsoft Defender</div>
+                        <div class="software-item">Proofpoint</div>
+                        <div class="software-item">Huntress</div>
+                        <div class="software-item">RocketCyber</div>
+                        <div class="software-item">Datto EDR</div>
+                        <div class="software-item">Microsoft 365</div>
+                        <div class="software-item">Azure</div>
+                        <div class="software-item">SharePoint</div>
+                        <div class="software-item">PowerShell</div>
+                        <div class="software-item">Bash Scripting</div>
+                        <div class="software-item">PRTG</div>
+                        <div class="software-item">SolarWinds</div>
+                        <div class="software-item">Kaseya</div>
+                        <div class="software-item">Windows Server</div>
+                        <div class="software-item">Virtualization</div>
+                        <div class="software-item">Firewall Management</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Interests</h2>
+                    <div class="interests-list">
+                        <span class="interest-tag">Cybersecurity</span>
+                        <span class="interest-tag">Cloud Infrastructure</span>
+                        <span class="interest-tag">Automation & Scripting</span>
+                        <span class="interest-tag">Threat Intelligence</span>
+                        <span class="interest-tag">Technology Innovation</span>
+                        <span class="interest-tag">Digital Photography</span>
+                        <span class="interest-tag">Cycling</span>
+                        <span class="interest-tag">Continuous Learning</span>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="content">
+                <div class="section">
+                    <h2>Work Experience</h2>
+                    
+                    <div class="experience-item">
+                        <div class="job-title">Senior Infrastructure Engineer</div>
+                        <div class="company">Loftus Technology</div>
+                        <div class="date">October 2022 - Present</div>
+                        <ul class="responsibilities">
+                            <li>Evaluate and select hardware, software, and networking components</li>
+                            <li>Document infrastructure architecture and standards</li>
+                            <li>Design and implement Microsoft SharePoint environments (on-premise or SharePoint Online), including site architecture, permissions models, document libraries, workflows, and integration with Microsoft 365</li>
+                            <li>Lead infrastructure projects such as server migrations, cloud transitions, or network upgrades</li>
+                            <li>Coordinate with other engineers and project managers to ensure timely delivery</li>
+                            <li>Perform hands-on implementation work (e.g., virtualization, firewall setups, storage configurations)</li>
+                            <li>Act as the final escalation point for complex technical issues across systems, networks, and security</li>
+                            <li>Support junior engineers and service desk technicians with guidance and troubleshooting expertise</li>
+                            <li>Interface with high-value clients to understand business requirements and translate them into IT solutions</li>
+                            <li>Set up and maintain advanced monitoring solutions (e.g., PRTG, SolarWinds)</li>
+                            <li>Oversee patch management, backup strategies, and disaster recovery plans</li>
+                            <li>Proactively identify potential infrastructure issues and recommend mitigations</li>
+                            <li>Implement and manage security measures including firewalls, endpoint protection, and MFA</li>
+                            <li>Migrate clients from on-prem infrastructure to cloud platforms</li>
+                            <li>Develop scripts (PowerShell, Bash) and Kaseya Workflows to automate routine tasks or deployments</li>
+                            <li>Create and maintain documentation for configurations, procedures, and client environments</li>
+                            <li>Establish and enforce best practices and standard operating procedures</li>
+                            <li>Mentor junior staff and help develop their skills</li>
+                            <li>Support sales team with technical scoping and proposals</li>
+                            <li>Coordinate with vendors for hardware, software, or licensing issues</li>
+                            <li>Design and test DR plans for clients</li>
+                            <li>Conduct health checks and security reviews</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-title">Support Engineer</div>
+                        <div class="company">Skope IT / Pinnacle Networks</div>
+                        <div class="date">April 2015 - October 2022</div>
+                        <ul class="responsibilities">
+                            <li>Support clients with technical computer issues</li>
+                            <li>Maintain client servers and identify issues</li>
+                            <li>Create and manage social media and marketing</li>
+                            <li>Diagnose problems and rectify them</li>
+                            <li>Monitor computer systems and proactively resolve issues</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-title">Draftsperson</div>
+                        <div class="company">Metricon Homes</div>
+                        <div class="date">September 2015 - March 2016</div>
+                        <ul class="responsibilities">
+                            <li>Modify standard plans to suit each client's specifications</li>
+                            <li>Prepare building documentation for new homes</li>
+                            <li>Draw shadow diagrams</li>
+                            <li>Construct virtual 3D models in SketchUp</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-title">Draftsperson</div>
+                        <div class="company">Oxford Architects</div>
+                        <div class="date">August 2015 - September 2015</div>
+                        <ul class="responsibilities">
+                            <li>Prepare virtual 3D models in ArchiCAD for 3D renders and documentation</li>
+                            <li>Apply construction knowledge for sections and details</li>
+                            <li>Prepare building designs and documentation for renovations, extensions and new homes</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-title">Draftsperson</div>
+                        <div class="company">Fen Architecture</div>
+                        <div class="date">June 2014 - June 2015</div>
+                        <ul class="responsibilities">
+                            <li>Site measure existing residential & commercial properties</li>
+                            <li>Draw complete set of documentation plans</li>
+                            <li>Analyze and apply building rules and regulations</li>
+                            <li>Construct virtual 3D models in SketchUp</li>
+                            <li>Specification documentation</li>
+                            <li>Analyze building's passive performance to satisfy 6 star requirements</li>
+                            <li>Liaise with councils, engineers, framing designers & private certifiers</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-title">Senior Architectural Draftsperson</div>
+                        <div class="company">Aspex Building Designers</div>
+                        <div class="date">June 2012 - April 2013</div>
+                        <ul class="responsibilities">
+                            <li>Site measure existing residential & commercial properties</li>
+                            <li>Draw complete set of documentation plans</li>
+                            <li>Analyze and apply building rules and regulations</li>
+                            <li>Construct virtual 3D models in SketchUp</li>
+                            <li>Analyze building's passive performance to satisfy 6 star requirements</li>
+                            <li>Liaise with clients to ensure design meets their needs and desires</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-title">Building Designer / Draftsperson</div>
+                        <div class="company">All Exclusive Homes</div>
+                        <div class="date">August 2008 - June 2012</div>
+                        <ul class="responsibilities">
+                            <li>Site measure existing residential properties</li>
+                            <li>Draw complete set of documentation plans</li>
+                            <li>Analyze and apply building rules and regulations</li>
+                            <li>Construct virtual 3D models in ArchiCAD</li>
+                            <li>Analyze building's passive performance to satisfy 6 star requirements</li>
+                            <li>Liaise with councils, engineers, framing designers & private certifiers</li>
+                            <li>Update and maintain All Exclusive Homes Website</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-title">Kitchen & Bathroom Designer / Building Designer</div>
+                        <div class="company">Boutique Builders / Seed Home Interiors</div>
+                        <div class="date">September 2006 - June 2008</div>
+                        <ul class="responsibilities">
+                            <li>Drafting and designing new houses</li>
+                            <li>Creating 3D rendered models for presentation</li>
+                            <li>Designing kitchen, bathroom and laundry layouts</li>
+                            <li>Estimating project costs</li>
+                            <li>Showroom maintenance</li>
+                            <li>Creating purchase orders and matching with invoices</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Education</h2>
+                    
+                    <div class="education-item">
+                        <div class="job-title">Bachelor's degree, Information Technology (Networking & Cybersecurity)</div>
+                        <div class="company">University of South Australia</div>
+                        <div class="date">2018 - 2020</div>
+                    </div>
+                    
+                    <div class="education-item">
+                        <div class="job-title">Bachelor of Architectural Studies</div>
+                        <div class="company">University of South Australia</div>
+                        <div class="date">2011 - 2014</div>
+                    </div>
+
+                    <div class="education-item">
+                        <div class="job-title">Associate Degree in Engineering</div>
+                        <div class="company">University of South Australia</div>
+                        <div class="date">2005 - 2009</div>
+                    </div>
+
+                    <div class="education-item">
+                        <div class="job-title">Diploma in Architectural Technology</div>
+                        <div class="company">University of South Australia</div>
+                        <div class="date">1999 - 2000</div>
+                    </div>
+
+                    <div class="education-item">
+                        <div class="job-title">Certificate III in Information Technology</div>
+                        <div class="company">University of South Australia</div>
+                        <div class="date">2001</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <section class="volunteer-section">
+            <div class="section">
+                <h2>Volunteer Work Experience</h2>
+                
+                <div class="experience-item">
+                    <div class="job-title">Church Live Video Stream Leader</div>
+                    <div class="company">Para Vista SDA Church</div>
+                    <div class="date">July 2017 - Present</div>
+                    <ul class="responsibilities">
+                        <li>Manage a small team to roster and coordinate responsibilities</li>
+                        <li>Find replacement when someone is unable to do the work</li>
+                        <li>Ensure that the setup is functional and working at all times</li>
+                        <li>Live stream church service each weekend</li>
+                        <li>Edit each week's video and maintain the YouTube channel</li>
+                        <li>Promote channel and grow the watching community</li>
+                    </ul>
+                </div>
+
+                <div class="experience-item">
+                    <div class="job-title">Church Data Presentation Leader</div>
+                    <div class="company">Para Vista SDA Church</div>
+                    <div class="date">July 2015 - Present</div>
+                    <ul class="responsibilities">
+                        <li>Manage a small team to roster and coordinate responsibilities</li>
+                        <li>Ensure that the setup is functional and working at all times</li>
+                        <li>Resolve issues that may stop or delay the service or event</li>
+                    </ul>
+                </div>
+
+                <div class="experience-item">
+                    <div class="job-title">Adventurers Leader</div>
+                    <div class="company">Para Vista SDA Adventurers Club</div>
+                    <div class="date">July 2014 - Present</div>
+                    <ul class="responsibilities">
+                        <li>Supervise young children aged 5-10 with activities, games, crafts and educational lessons</li>
+                        <li>Official photographer to take photos of each event for end of year presentation</li>
+                        <li>Assist with planning and coordinating each event</li>
+                        <li>Prepare lesson plans for each badge/award</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>References</h2>
+                <div class="references-grid">
+                    <div class="reference-card">
+                        <div class="reference-name">Michael Nedic</div>
+                        <div class="reference-title">Director, Skope IT</div>
+                        <div class="reference-contact">
+                            michael@SkopeIT.com.au<br>
+                            0411 227 340
+                        </div>
+                    </div>
+
+                    <div class="reference-card">
+                        <div class="reference-name">Ben Feijen</div>
+                        <div class="reference-title">Director, Fen Architecture</div>
+                        <div class="reference-contact">
+                            ben@fenarchitecture.com.au<br>
+                            0427 617 331
+                        </div>
+                    </div>
+
+                    <div class="reference-card">
+                        <div class="reference-name">Pastor Stephen Bews</div>
+                        <div class="reference-title">Pastor, Para Vista SDA Church</div>
+                        <div class="reference-contact">
+                            StephenBews@adventist.org.au<br>
+                            0424 503 681
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
